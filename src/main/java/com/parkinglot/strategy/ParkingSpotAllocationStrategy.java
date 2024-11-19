@@ -2,6 +2,7 @@ package com.parkinglot.strategy;
 
 import com.parkinglot.enums.VehicleType;
 import com.parkinglot.model.ParkingSpot;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 

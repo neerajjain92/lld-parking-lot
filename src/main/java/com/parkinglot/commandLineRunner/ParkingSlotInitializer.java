@@ -4,7 +4,6 @@ import com.parkinglot.enums.SlotSize;
 import com.parkinglot.model.ParkingSpot;
 import com.parkinglot.repository.ParkingSpotRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -32,7 +31,7 @@ public class ParkingSlotInitializer implements CommandLineRunner {
             parkingSpotList.add(ParkingSpot.builder()
                     .slotNumber(String.format("G-XXL-%02d", i))
                     .slotSize(SlotSize.XXL)
-                    .occupied(false)
+                    .occupied(true)
                     .floorNumber(0)
                     .distanceToExit(i) // Closer spots have lower numbers
                     .hasEVCharger(i <= 3)
@@ -65,7 +64,7 @@ public class ParkingSlotInitializer implements CommandLineRunner {
                     .build());
         }
 
-        parkingSpotRepository.saveAll(parkingSpotList);
-        log.info(String.format("Parking slots initialized and total slots are %02d", parkingSpotRepository.count()));
+        List<ParkingSpot> savedSpots = parkingSpotRepository.saveAll(parkingSpotList);
+        log.info(String.format("Parking slots initialized and total slots are %02d", savedSpots.size()));
     }
 }

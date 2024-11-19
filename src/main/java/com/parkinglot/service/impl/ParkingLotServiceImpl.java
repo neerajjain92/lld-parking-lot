@@ -9,6 +9,7 @@ import com.parkinglot.repository.ParkingReceiptRepository;
 import com.parkinglot.repository.ParkingSpotRepository;
 import com.parkinglot.service.ParkingLotService;
 import com.parkinglot.strategy.ParkingSpotAllocationStrategy;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -17,12 +18,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ParkingLotServiceImpl implements ParkingLotService {
 
-    private ParkingSpotAllocationStrategy parkingSpotAllocationStrategy;
-    private ParkingSpotRepository parkingSpotRepository;
-    private ParkingReceiptRepository parkingReceiptRepository;
-    private TransactionTemplate transactionTemplate;
+    private final ParkingSpotAllocationStrategy parkingSpotAllocationStrategy;
+    private final ParkingSpotRepository parkingSpotRepository;
+    private final ParkingReceiptRepository parkingReceiptRepository;
+    private final TransactionTemplate transactionTemplate;
 
     @Override
     public ParkingRequestResponse parkVehicle(ParkingRequest parkingRequest) {

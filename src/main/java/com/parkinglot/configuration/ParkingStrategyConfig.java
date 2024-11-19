@@ -1,31 +1,36 @@
 package com.parkinglot.configuration;
 
+import com.parkinglot.repository.ParkingSpotRepository;
 import com.parkinglot.strategy.EVPrioritySpotStrategy;
 import com.parkinglot.strategy.FirstAvailableSpotStrategy;
 import com.parkinglot.strategy.ParkingSpotAllocationStrategy;
 import com.parkinglot.strategy.ProximityBasedSpotStrategy;
-import org.springframework.beans.factory.annotation.Configurable;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@Configurable
+@Configuration
+@RequiredArgsConstructor
 public class ParkingStrategyConfig {
+
+    private final ParkingSpotRepository parkingSpotRepository;
 
     @Bean
     @ConditionalOnProperty(name = "parking.allocation.strategy", havingValue = "firstAvailableSpot")
-    private ParkingSpotAllocationStrategy firstAvailableSpotStrategy() {
-        return new FirstAvailableSpotStrategy();
+    public ParkingSpotAllocationStrategy firstAvailableSpotStrategy() {
+        return new FirstAvailableSpotStrategy(parkingSpotRepository);
     }
 
     @Bean
     @ConditionalOnProperty(name = "parking.allocation.strategy", havingValue = "evPrioritySpot")
-    private ParkingSpotAllocationStrategy evPrioritySpotStrategy() {
+    public ParkingSpotAllocationStrategy evPrioritySpotStrategy() {
         return new EVPrioritySpotStrategy();
     }
 
     @Bean
     @ConditionalOnProperty(name = "parking.allocation.strategy", havingValue = "proximitySpotStrategy")
-    private ParkingSpotAllocationStrategy proximitySpotStrategy() {
+    public ParkingSpotAllocationStrategy proximitySpotStrategy() {
         return new ProximityBasedSpotStrategy();
     }
 }
