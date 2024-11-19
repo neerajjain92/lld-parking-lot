@@ -1,0 +1,14 @@
+target/
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### Mac OS ###
+.DS_Store
+
+### Maven ###
+mvnw
+mvnw.cmd
+HELP.md
