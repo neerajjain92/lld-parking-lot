@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ParkingReceiptRepository extends JpaRepository<ParkingReceipt, Long> {
-
+    ParkingReceipt findByReceiptNumber(String receiptNumber);
 }

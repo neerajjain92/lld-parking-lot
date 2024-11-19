@@ -1,8 +1,11 @@
 package com.parkinglot.service.impl;
 
 import com.parkinglot.dto.request.ParkingRequest;
+import com.parkinglot.dto.request.UnParkingRequest;
 import com.parkinglot.dto.response.ParkingRequestResponse;
+import com.parkinglot.exceptions.InvalidParkingReceiptException;
 import com.parkinglot.exceptions.NoAvailableSlotsException;
+import com.parkinglot.exceptions.ParkingReceiptNotFoundException;
 import com.parkinglot.model.ParkingReceipt;
 import com.parkinglot.model.ParkingSpot;
 import com.parkinglot.repository.ParkingReceiptRepository;
@@ -51,6 +54,20 @@ public class ParkingLotServiceImpl implements ParkingLotService {
         });
     }
 
+    @Override
+    public void unParkVehicle(UnParkingRequest unParkingRequest) {
+        ParkingReceipt parkingReceipt = parkingReceiptRepository.findByReceiptNumber(unParkingRequest.getParkingReceiptNumber());
+        if (parkingReceipt == null) {
+            throw new ParkingReceiptNotFoundException(unParkingRequest.getParkingReceiptNumber());
+        }
+        if (!parkingReceipt.isActive()) {
+            throw new InvalidParkingReceiptException(unParkingRequest.getParkingReceiptNumber());
+        }
+
+        parkingReceipt.setExitTime(LocalDateTime.now());
+        parkingReceiptRepository.save(parkingReceipt);
+    }
+
     // Generate Parking Receipt
     private ParkingReceipt generateParkingReceipt(ParkingRequest parkingRequest, ParkingSpot parkingSpot, LocalDateTime currentTime) {
         ParkingReceipt parkingReceipt = ParkingReceipt.builder()
@@ -74,10 +91,5 @@ public class ParkingLotServiceImpl implements ParkingLotService {
         parkingSpot.setOccupiedAt(currentTime);
         parkingSpotRepository.save(parkingSpot);
         return parkingSpot;
-    }
-
-    @Override
-    public void unparkVehicle(ParkingRequest parkingRequest) {
-
     }
 }

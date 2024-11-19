@@ -40,4 +40,8 @@ public class ParkingReceipt {
     // Timing Details
     private LocalDateTime entryTime;
     private LocalDateTime exitTime;
+
+    public boolean isActive() {
+        return exitTime == null;
+    }
 }

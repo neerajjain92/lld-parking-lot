@@ -1,8 +1,11 @@
 package com.parkinglot.controller;
 
 import com.parkinglot.dto.request.ParkingRequest;
+import com.parkinglot.dto.request.UnParkingRequest;
 import com.parkinglot.dto.response.ParkingRequestResponse;
+import com.parkinglot.exceptions.InvalidParkingReceiptException;
 import com.parkinglot.exceptions.NoAvailableSlotsException;
+import com.parkinglot.exceptions.ParkingReceiptNotFoundException;
 import com.parkinglot.exceptions.SlotAllocationException;
 import com.parkinglot.service.ParkingLotService;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +37,18 @@ public class ParkingController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         }
         return new ResponseEntity<>(parkingRequestResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/unpark")
+    public ResponseEntity<?> parkVehicle(@RequestBody UnParkingRequest unparkingRequest) {
+        log.info("Received request to un-park vehicle parkingReceipt: {}", unparkingRequest.toString());
+        try {
+            parkingLotService.unParkVehicle(unparkingRequest);
+        } catch (InvalidParkingReceiptException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (ParkingReceiptNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
